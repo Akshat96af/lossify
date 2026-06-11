@@ -28,7 +28,7 @@ Lossify is a music player created out of a genuine love for music. No ads, no al
 ![Home Page](assets/home%20page.png)
 
 ### Search
-![Search](assets/home%20page%20.png)
+![Search](assets/home%20page%202.png)
 
 ### Album Page with Live Lyrics Sidebar
 ![Album Page](assets/album%20page.png)
