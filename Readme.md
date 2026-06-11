@@ -30,7 +30,7 @@ Lossify is a music player created out of a genuine love for music. No ads, no al
 ### Search
 ![Search](assets/home%20page%202.png)
 
-### Album Page with Live Lyrics Sidebar
+### Album Page
 ![Album Page](assets/album%20page.png)
 
 ### Fullscreen Player with Synced Lyrics
