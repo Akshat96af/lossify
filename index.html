@@ -15,6 +15,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet" />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+
+  // --- Enhanced Premium Animations ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.15
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('premium-reveal-active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    const revealElements = document.querySelectorAll('h1, h2, h3, p, .feature-card, .screenshot-wrapper, .btn');
+    revealElements.forEach(el => {
+      el.classList.add('premium-reveal');
+      observer.observe(el);
+    });
+  });
+
+</script>
 
   <style>
     :root {
@@ -1040,6 +1067,75 @@
       .hero-cta { width: 100%; justify-content: center; max-width: 320px; }
     }
 
+  
+    /* --- Premium & AI-looking Touch CSS --- */
+    .premium-reveal {
+      opacity: 0;
+      transform: translateY(30px) scale(0.98);
+      transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: opacity, transform;
+    }
+    .premium-reveal-active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    body {
+      letter-spacing: -0.01em;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 {
+      letter-spacing: -0.03em;
+      text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+    }
+
+    .feature-card, .screenshot-wrapper {
+      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5), inset 0 0 0 1px var(--border-strong);
+      transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+    }
+    .feature-card:hover, .screenshot-wrapper:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 20px 50px -15px rgba(255, 45, 120, 0.2), inset 0 0 0 1px var(--pink);
+      border-color: var(--pink);
+    }
+
+    .btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: all 0.6s ease;
+    }
+    .btn:hover::after {
+      left: 100%;
+    }
+
+    
+    /* Particle Canvas container */
+    #particleTitleCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    .particle-hidden-title {
+      opacity: 0 !important;
+      visibility: hidden;
+      user-select: none;
+      pointer-events: none;
+    }
+
   </style>
 </head>
 <body>
@@ -1074,6 +1170,7 @@
   </div>
 
   <section id="hero" aria-label="Hero">
+    <canvas id="particleTitleCanvas" aria-hidden="true"></canvas>
     <div class="hero-orbs" id="heroOrbs" aria-hidden="true">
       <div class="hero-orb hero-orb-1"></div>
       <div class="hero-orb hero-orb-2"></div>
@@ -1084,20 +1181,7 @@
     <div class="hero-vignette" aria-hidden="true"></div>
 
     <div class="hero-content">
-      <h1 class="hero-title grad-text" id="heroTitle">Lossify</h1>
-      <a
-        href="assets/lossify stable v2.5.apk"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="hero-cta"
-        id="heroCTA"
-        aria-label="Download Lossify APK for Android"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download for Android
-      </a>
+      <h1 class="hero-title particle-hidden-title" id="heroTitle">Lossify</h1>
     </div>
 
     <div class="hero-scroll" id="heroScroll" aria-hidden="true">
@@ -1115,7 +1199,7 @@
           <span class="section-label reveal">The Philosophy</span>
           <h2 class="section-title reveal d1" id="about-title">Music deserves<br>perfection.</h2>
           <p class="reveal d2">
-            <strong>Lossify</strong> escapes the modern era of compressed streaming and invasive ad-networks. It's an open-source sanctuary built specifically to deliver local music files in absolute bit-perfect quality.
+            <strong>Lossify</strong> escapes the modern era of compressed streaming and invasive ad-networks. It's a dedicated sanctuary built specifically to deliver local music files in absolute bit-perfect quality.
           </p>
           <p class="reveal d3">
             No subscriptions. No data harvesting. No distractions. Just a <strong>beautifully crafted interface</strong> that gets out of your way and lets you hear your music the way it was meant to be heard.
@@ -1136,7 +1220,7 @@
           </div>
           <div class="stat-card">
             <div class="stat-number grad-text">100%</div>
-            <div class="stat-label">Open Source</div>
+            <div class="stat-label">Free to Use</div>
           </div>
         </div>
       </div>
@@ -1287,6 +1371,24 @@
         </div>
 
       </div>
+      
+      <div class="reveal" style="display: flex; justify-content: center; margin-top: 4rem;">
+        <a
+          href="assets/lossify stable v2.5.apk"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hero-cta"
+          id="heroCTA"
+          style="opacity: 1;"
+          aria-label="Download Lossify APK for Android"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download for Android
+        </a>
+      </div>
+      
     </div>
   </section>
 
@@ -1296,7 +1398,7 @@
     <div class="container">
       <div class="footer-inner">
         <div class="footer-logo grad-text">Lossify</div>
-        <p class="footer-copy">&copy; 2026 Crafted by AKSHAT96AF. Open Source.</p>
+        <p class="footer-copy">&copy; 2026 Crafted by AKSHAT96AF</p>
         <div class="footer-links">
           <a href="https://github.com/Akshat96af/lossify" target="_blank" rel="noopener" aria-label="GitHub repository">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -1390,7 +1492,7 @@
       var heroScroll = document.getElementById('heroScroll');
 
       function animateHero() {
-        var items = [heroEye, heroTitle, heroSub, heroCTA, heroScroll];
+        var items = [heroEye, heroTitle, heroSub, heroScroll];
         items.forEach(function(el, i) {
           if (!el) return;
           el.style.transform = 'translateY(40px)';
@@ -1536,6 +1638,154 @@
         heroCTA_el.addEventListener('mouseleave', function() {
           heroCTA_el.style.transform = '';
         });
+      }
+
+      var particleCanvas = document.getElementById('particleTitleCanvas');
+      if (particleCanvas) {
+        var pCtx = particleCanvas.getContext('2d');
+        var pMouse = { x: -1000, y: -1000, radius: 150 };
+        var particlesArray = [];
+        var pAnimationId;
+        
+        function getOffset(el) {
+          var rect = el.getBoundingClientRect();
+          return { left: rect.left + window.scrollX, top: rect.top + window.scrollY };
+        }
+
+        class Particle {
+          constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.size = 2;
+            this.baseX = x;
+            this.baseY = y;
+            this.density = Math.random() * 40 + 5;
+            this.vx = 0;
+            this.vy = 0;
+          }
+          draw() {
+            pCtx.fillStyle = this.color;
+            pCtx.beginPath();
+            pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            pCtx.closePath();
+            pCtx.fill();
+          }
+          update() {
+            var dx = pMouse.x - this.x;
+            var dy = pMouse.y - this.y;
+            var distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < pMouse.radius) {
+              var forceDirectionX = dx / distance;
+              var forceDirectionY = dy / distance;
+              // Exponential falloff for softer interaction
+              var force = Math.pow((pMouse.radius - distance) / pMouse.radius, 1.2);
+
+              var directionX = forceDirectionX * force * this.density;
+              var directionY = forceDirectionY * force * this.density;
+
+              // Accumulate velocity rather than teleporting
+              this.vx -= directionX;
+              this.vy -= directionY;
+            } else {
+              // Smooth, magnetic pull back to base
+              var dxBase = this.baseX - this.x;
+              var dyBase = this.baseY - this.y;
+              this.vx += dxBase * 0.05;
+              this.vy += dyBase * 0.05;
+            }
+            
+            // Friction for butter-smooth liquid feel
+            this.vx *= 0.82;
+            this.vy *= 0.82;
+            
+            this.x += this.vx;
+            this.y += this.vy;
+          }
+        }
+
+        function initParticles() {
+          particlesArray = [];
+          var heroEl = document.getElementById('hero');
+          var titleEl = document.getElementById('heroTitle');
+          
+          particleCanvas.width = heroEl.offsetWidth;
+          particleCanvas.height = heroEl.offsetHeight;
+          
+          var heroRect = heroEl.getBoundingClientRect();
+          var titleRect = titleEl.getBoundingClientRect();
+          
+          var textX = (titleRect.left - heroRect.left) + titleRect.width / 2;
+          var textY = (titleRect.top - heroRect.top) + titleRect.height / 2;
+
+          var text = 'Lossify';
+          var fontSize = Math.min(Math.max(window.innerWidth * 0.14, 72), 160);
+
+          pCtx.font = '900 ' + fontSize + 'px Inter, sans-serif';
+          pCtx.textAlign = 'center';
+          pCtx.textBaseline = 'middle';
+
+          var gradient = pCtx.createLinearGradient(
+             textX - titleRect.width / 2, 0, 
+             textX + titleRect.width / 2, 0
+          );
+          gradient.addColorStop(0.2, "#ff2d78");
+          gradient.addColorStop(0.5, "#9b5de5");
+          gradient.addColorStop(0.8, "#06cff7");
+          pCtx.fillStyle = gradient;
+
+          pCtx.fillText(text, textX, textY);
+          var textCoordinates = pCtx.getImageData(0, 0, particleCanvas.width, particleCanvas.height);
+          pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+          for (let y = 0; y < textCoordinates.height; y += 4) {
+            for (let x = 0; x < textCoordinates.width; x += 4) {
+              const alphaIndex = (y * 4 * textCoordinates.width) + (x * 4) + 3;
+              if (textCoordinates.data[alphaIndex] > 128) {
+                const r = textCoordinates.data[alphaIndex - 3];
+                const g = textCoordinates.data[alphaIndex - 2];
+                const b = textCoordinates.data[alphaIndex - 1];
+                const color = `rgb(${r},${g},${b})`;
+                particlesArray.push(new Particle(x, y, color));
+              }
+            }
+          }
+        }
+
+        function animateParticles() {
+          pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+          particlesArray.forEach(p => {
+            p.draw();
+            p.update();
+          });
+          pAnimationId = requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('mousemove', function(e) {
+          var offset = getOffset(particleCanvas);
+          pMouse.x = e.pageX - offset.left;
+          pMouse.y = e.pageY - offset.top;
+        });
+
+        window.addEventListener('resize', function() {
+          clearTimeout(window.resizeTimer);
+          window.resizeTimer = setTimeout(function() {
+            initParticles();
+          }, 200);
+        });
+
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(function() {
+            initParticles();
+            animateParticles();
+          });
+        } else {
+          setTimeout(function() {
+            initParticles();
+            animateParticles();
+          }, 200);
+        }
       }
 
       (function initShader() {
